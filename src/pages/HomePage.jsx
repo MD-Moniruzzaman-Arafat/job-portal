@@ -26,14 +26,14 @@ export default function HomePage() {
 
   return (
     <>
-      <main class="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         {/* <!-- Hero Section --> */}
         <Hero />
 
         {/* <!-- Search and Filters --> */}
-        <section class="mb-8">
-          <div class="card p-6">
-            <div class="space-y-4">
+        <section className="mb-8">
+          <div className="card p-6">
+            <div className="space-y-4">
               {/* <!-- Search Bar --> */}
               <Search />
 
@@ -47,29 +47,29 @@ export default function HomePage() {
         <Result />
 
         {/* <!-- Job Cards Grid --> */}
-        <div class="grid gap-4 md:gap-6">
+        <div className="grid gap-4 md:gap-6">
           <JobCard data={data} isLoading={isLoading} isError={isError} />
         </div>
 
         {/* <!-- Load More / Pagination --> */}
-        <div class="mt-12 flex flex-col items-center gap-4">
-          <button onClick={handleLoadMore} class="btn btn-outline">
+        <div className="mt-12 flex flex-col items-center gap-4">
+          <button onClick={handleLoadMore} className="btn btn-outline">
             Load More Jobs
             <svg
-              class="ml-2 h-4 w-4"
+              className="ml-2 h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M19 9l-7 7-7-7"
               />
             </svg>
           </button>
-          <p class="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Showing {formatNumber(data?.data.length || 0)} of{' '}
             {formatNumber(data?.count || 0)} jobs
           </p>

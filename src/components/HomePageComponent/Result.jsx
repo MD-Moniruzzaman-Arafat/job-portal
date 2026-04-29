@@ -9,20 +9,17 @@ export default function Result() {
   });
   return (
     <>
-      <div class="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 class="text-2xl font-semibold">Available Jobs</h2>
-          <p class="text-sm text-muted-foreground mt-1">
+          <h2 className="text-2xl font-semibold">Available Jobs</h2>
+          <p className="text-sm text-muted-foreground mt-1">
             Showing {formatNumber(data?.count || 0)} results
           </p>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-sm text-muted-foreground">Sort by:</span>
-          <div class="dropdown">
-            <button
-              class="btn btn-outline text-sm h-9"
-              onclick="toggleDropdown('sortDropdown')"
-            >
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Sort by:</span>
+          <div className="dropdown">
+            <button className="btn btn-outline text-sm h-9">
               Most Recent
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,23 +28,23 @@ export default function Result() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down-icon lucide-chevron-down ml-2 h-3 w-3"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-chevron-down-icon lucide-chevron-down ml-2 h-3 w-3"
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
-            <div id="sortDropdown" class="dropdown-content card p-2">
-              <button class="w-full text-left text-sm p-2 hover:bg-accent rounded">
+            <div id="sortDropdown" className="dropdown-content card p-2">
+              <button className="w-full text-left text-sm p-2 hover:bg-accent rounded">
                 Most Recent
               </button>
 
-              <button class="w-full text-left text-sm p-2 hover:bg-accent rounded">
+              <button className="w-full text-left text-sm p-2 hover:bg-accent rounded">
                 Salary (High to Low)
               </button>
-              <button class="w-full text-left text-sm p-2 hover:bg-accent rounded">
+              <button className="w-full text-left text-sm p-2 hover:bg-accent rounded">
                 Salary (Low to High)
               </button>
             </div>

@@ -1,6 +1,33 @@
+import { useMutation } from '@tanstack/react-query';
 import { Eye, LogIn, Mail, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router';
+import { login } from '../api/api';
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      toast.success('Login Success');
+      console.log(data);
+    },
+    onError: () => toast.error('Login Fail'),
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate({ ...data, role: 'USER' });
+  };
   return (
     <>
       <main className="container mx-auto px-4 py-8">
@@ -21,7 +48,7 @@ export default function LoginPage() {
           {/* <!-- Login Card --> */}
           <div className="card p-8 md:p-10">
             {/* <!-- Login Form --> */}
-            <form className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               {/* <!-- Email --> */}
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
@@ -31,15 +58,18 @@ export default function LoginPage() {
                 <div className="relative mt-2">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <input
+                    {...register('email', { required: 'email is required' })}
                     type="email"
                     id="email"
                     name="email"
-                    className="input pl-10"
+                    className={`input pl-10 ${errors.email && 'border-red-500'}`}
                     placeholder="you@example.com"
-                    required
                   />
                 </div>
               </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
 
               {/* <!-- Password --> */}
               <div className="space-y-2">
@@ -60,20 +90,33 @@ export default function LoginPage() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   <input
-                    type="password"
+                    {...register('password', {
+                      required: 'password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'password must be at least 6 characters',
+                      },
+                    })}
+                    type={`${showPassword ? 'text' : 'password'}`}
                     id="password"
                     name="password"
-                    className="input pl-10 pr-10"
+                    className={`input pl-10 pr-10 ${errors.password && 'border-red-500'}`}
                     placeholder="Enter your password"
-                    required
                   />
+
                   <button
+                    onClick={() => setShowPassword(!showPassword)}
                     type="button"
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               {/* <!-- Submit Button --> */}
@@ -104,13 +147,13 @@ export default function LoginPage() {
             {/* <!-- Sign Up Link --> */}
             <div className="mt-8 text-center text-sm text-muted-foreground">
               Don't have an account?
-              <a
-                href="register.html"
+              <Link
+                to="/register/userRegister"
                 className="text-primary hover:underline font-medium"
                 id="signupLink"
               >
                 Sign up as Job Seeker
-              </a>
+              </Link>
             </div>
           </div>
 

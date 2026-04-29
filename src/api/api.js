@@ -17,3 +17,13 @@ export const getAllJobs = async (e) => {
     throw error;
   }
 };
+
+export const login = async (data) => {
+  try {
+    const response = await api.post(`/auth/login`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
