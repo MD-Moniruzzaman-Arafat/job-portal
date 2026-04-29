@@ -14,7 +14,7 @@ export default function Navbar() {
               <span className="text-xl font-bold">LWS Job Portal</span>
             </Link>
           </div>
-          {location.pathname === '/login' && (
+          {location.pathname === '/login/userLogin' && (
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">
                 Don't have an account?
@@ -27,9 +27,22 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+          {location.pathname === '/login/companyLogin' && (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                Don't have an account?
+              </span>
+              <Link
+                to={'/register/companyRegister'}
+                className="btn btn-ghost text-sm"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
           {location.pathname === '/' && (
             <div className="flex items-center gap-4">
-              <Link to={'/login'} className="btn btn-ghost text-sm">
+              <Link to={'/login/userLogin'} className="btn btn-ghost text-sm">
                 Sign In
               </Link>
               <a
@@ -45,7 +58,7 @@ export default function Navbar() {
               <span className="text-sm text-muted-foreground">
                 Already have an account?
               </span>
-              <Link to={'/login'} className="btn btn-ghost text-sm">
+              <Link to={'/login/userLogin'} className="btn btn-ghost text-sm">
                 Sign In
               </Link>
             </div>
@@ -55,7 +68,10 @@ export default function Navbar() {
               <span className="text-sm text-muted-foreground">
                 Already have an account?
               </span>
-              <Link to={'/login'} className="btn btn-ghost text-sm">
+              <Link
+                to={'/login/companyLogin'}
+                className="btn btn-ghost text-sm"
+              >
                 Sign In
               </Link>
             </div>

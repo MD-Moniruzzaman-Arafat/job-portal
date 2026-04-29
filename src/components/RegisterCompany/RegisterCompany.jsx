@@ -535,7 +535,7 @@ export default function RegisterCompany() {
         <div className="mt-8 text-center text-sm text-muted-foreground">
           Already have an account?
           <Link
-            to={'/login'}
+            to={'/login/companyLogin'}
             className="text-primary hover:underline font-medium"
           >
             Sign in

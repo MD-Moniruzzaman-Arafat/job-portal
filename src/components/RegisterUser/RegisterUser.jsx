@@ -322,7 +322,7 @@ export default function RegisterUser() {
         <div className="mt-8 text-center text-sm text-muted-foreground">
           Already have an account?
           <Link
-            to="/login"
+            to="/login/userLogin"
             className="text-primary hover:underline font-medium"
           >
             Sign in
