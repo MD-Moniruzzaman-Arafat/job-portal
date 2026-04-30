@@ -1,12 +1,43 @@
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router';
+import { signup } from '../../api/api';
 
 export default function RegisterUser() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const passWord = watch('password');
+
+  const mutation = useMutation({
+    mutationFn: signup,
+    onSuccess: (data) => {
+      toast.success('Signup Success');
+      console.log(data);
+    },
+    onError: () => toast.error('Signup Fail'),
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate({ ...data, role: 'USER' });
+    console.log(data);
+  };
   return (
     <>
       {/* <!-- Registration Card --> */}
       <div className="card p-8 md:p-10">
         {/* <!-- Registration Form --> */}
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* <!-- Name Fields Row --> */}
           <div className="space-y-2">
             <label for="name" className="label">
@@ -29,14 +60,17 @@ export default function RegisterUser() {
                 <circle cx="12" cy="7" r="4" />
               </svg>
               <input
+                {...register('name', { required: 'name is Require' })}
                 type="text"
                 id="name"
                 name="name"
-                className="input pl-10"
+                className={`input pl-10 ${errors.name && 'border-red-500'}`}
                 placeholder="John"
-                required
               />
             </div>
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            )}
           </div>
 
           {/* <!-- Email & Phone Row --> */}
@@ -63,14 +97,17 @@ export default function RegisterUser() {
                   <rect x="2" y="4" width="20" height="16" rx="2" />
                 </svg>
                 <input
+                  {...register('email', { required: 'email is require' })}
                   type="email"
                   id="email"
                   name="email"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.email && 'border-red-500'}`}
                   placeholder="john.doe@example.com"
-                  required
                 />
               </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label for="phone" className="label">
@@ -93,14 +130,19 @@ export default function RegisterUser() {
                   <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
                 </svg>
                 <input
+                  {...register('phone', {
+                    required: 'phone number is require',
+                  })}
                   type="tel"
                   id="phone"
                   name="phone"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.phone && 'border-red-500'}`}
                   placeholder="+1 (555) 000-0000"
-                  required
                 />
               </div>
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
+              )}
             </div>
           </div>
 
@@ -129,9 +171,12 @@ export default function RegisterUser() {
                   <path d="M3 10h18" />
                 </svg>
                 <select
+                  {...register('experience', {
+                    required: 'experience is require',
+                  })}
                   id="experience"
                   name="experience"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.experience && 'border-red-500'}`}
                 >
                   <option value="">Select experience level</option>
                   <option value="entry">Entry Level (0-2 years)</option>
@@ -140,6 +185,11 @@ export default function RegisterUser() {
                   <option value="expert">Expert (10+ years)</option>
                 </select>
               </div>
+              {errors.experience && (
+                <p className="text-red-500 text-sm">
+                  {errors.experience.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -167,17 +217,19 @@ export default function RegisterUser() {
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
                 <input
-                  type="password"
+                  {...register('password', {
+                    required: 'password is required',
+                  })}
+                  type={`${showPassword ? 'text' : 'password'}`}
                   id="password"
                   name="password"
-                  className="input pl-10 pr-10"
+                  className={`input pl-10 pr-10 ${errors.password && 'border-red-500'}`}
                   placeholder="Create a strong password"
-                  required
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  onclick="togglePassword('password')"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -196,6 +248,11 @@ export default function RegisterUser() {
                   </svg>
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <label for="confirmPassword" className="label">
@@ -219,17 +276,20 @@ export default function RegisterUser() {
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
                 <input
-                  type="password"
+                  {...register('confirmPassword', {
+                    required: 'confirmPassword is required',
+                    validate: (value) => value === passWord || 'not matched',
+                  })}
+                  type={`${showConfirmPassword ? 'text' : 'password'}`}
                   id="confirmPassword"
                   name="confirmPassword"
-                  className="input pl-10 pr-10"
+                  className={`input pl-10 pr-10 ${errors.confirmPassword && 'border-red-500'}`}
                   placeholder="Re-enter your password"
-                  required
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  onclick="togglePassword('confirmPassword')"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -248,6 +308,11 @@ export default function RegisterUser() {
                   </svg>
                 </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
           </div>
           <p className="text-xs text-muted-foreground -mt-2">
@@ -257,11 +322,11 @@ export default function RegisterUser() {
           {/* <!-- Terms and Conditions --> */}
           <div className="flex items-start gap-2">
             <input
+              {...register('terms', { required: 'terms and service require' })}
               type="checkbox"
               id="terms"
               name="terms"
               className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring"
-              required
             />
             <label for="terms" className="text-sm text-muted-foreground">
               I agree to the
@@ -274,7 +339,9 @@ export default function RegisterUser() {
               </a>
             </label>
           </div>
-
+          {errors.terms && (
+            <p className="text-red-500 text-sm">{errors.terms.message}</p>
+          )}
           {/* <!-- Newsletter Subscription --> */}
 
           {/* <!-- Submit Button --> */}

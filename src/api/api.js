@@ -27,3 +27,13 @@ export const login = async (data) => {
     throw error;
   }
 };
+
+export const signup = async (data) => {
+  try {
+    const response = await api.post('/auth/register', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
