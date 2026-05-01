@@ -69,7 +69,7 @@ export default function RegisterUser() {
               />
             </div>
             {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
+              <p className="text-red-500 text-xs">{errors.name.message}</p>
             )}
           </div>
 
@@ -106,7 +106,7 @@ export default function RegisterUser() {
                 />
               </div>
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
+                <p className="text-red-500 text-xs">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -141,7 +141,7 @@ export default function RegisterUser() {
                 />
               </div>
               {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                <p className="text-red-500 text-xs">{errors.phone.message}</p>
               )}
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function RegisterUser() {
                 </select>
               </div>
               {errors.experience && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-xs">
                   {errors.experience.message}
                 </p>
               )}
@@ -249,7 +249,7 @@ export default function RegisterUser() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-xs">
                   {errors.password.message}
                 </p>
               )}
@@ -309,7 +309,7 @@ export default function RegisterUser() {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">
+                <p className="text-red-500 text-xs">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -340,7 +340,7 @@ export default function RegisterUser() {
             </label>
           </div>
           {errors.terms && (
-            <p className="text-red-500 text-sm">{errors.terms.message}</p>
+            <p className="text-red-500 text-xs">{errors.terms.message}</p>
           )}
           {/* <!-- Newsletter Subscription --> */}
 

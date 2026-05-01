@@ -1,11 +1,42 @@
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router';
+import { signup } from '../../api/api';
 
 export default function RegisterCompany() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const passWord = watch('password');
+
+  const mutation = useMutation({
+    mutationFn: signup,
+    onSuccess: (data) => {
+      toast.success('Signup Success');
+      console.log(data);
+    },
+    onError: () => toast.error('Signup Fail'),
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate({ ...data, role: 'COMPANY' });
+    console.log(data);
+  };
   return (
     <>
       <div className="card p-8 md:p-10 ">
         {/* <!-- Registration Form --> */}
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* <!-- Company Information Section --> */}
           <div className="space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-gray-200 border-border">
@@ -62,14 +93,21 @@ export default function RegisterCompany() {
                   <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
                 </svg>
                 <input
+                  {...register('name', {
+                    required: 'Company name is required',
+                  })}
                   type="text"
                   id="companyName"
                   name="companyName"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.name ? 'border-red-500' : ''}`}
                   placeholder="e.g., TechCorp Solutions"
-                  required
                 />
               </div>
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -94,14 +132,25 @@ export default function RegisterCompany() {
                   <rect x="2" y="4" width="20" height="16" rx="2" />
                 </svg>
                 <input
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: 'Please enter a valid email address',
+                    },
+                  })}
                   type="email"
                   id="email"
                   name="email"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.email ? 'border-red-500' : ''}`}
                   placeholder="john.doe@company.com"
-                  required
                 />
               </div>
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* <!-- Company Website & Industry Row --> */}
@@ -129,14 +178,26 @@ export default function RegisterCompany() {
                     <path d="M2 12h20" />
                   </svg>
                   <input
+                    {...register('websiteUrl', {
+                      required: 'Website is required',
+                      pattern: {
+                        value:
+                          /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+                        message: 'Please enter a valid website URL',
+                      },
+                    })}
                     type="url"
                     id="website"
                     name="website"
-                    className="input pl-10"
+                    className={`input pl-10 ${errors.websiteUrl ? 'border-red-500' : ''}`}
                     placeholder="https://example.com"
-                    required
                   />
                 </div>
+                {errors.websiteUrl && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.websiteUrl.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label for="industry" className="label">
@@ -160,10 +221,12 @@ export default function RegisterCompany() {
                     <rect width="20" height="14" x="2" y="6" rx="2" />
                   </svg>
                   <select
+                    {...register('industry', {
+                      required: 'Industry is required',
+                    })}
                     id="industry"
                     name="industry"
-                    className="input pl-10"
-                    required
+                    className={`input pl-10 ${errors.industry ? 'border-red-500' : ''}`}
                   >
                     <option value="">Select industry</option>
                     <option value="technology">Technology</option>
@@ -177,6 +240,11 @@ export default function RegisterCompany() {
                     <option value="other">Other</option>
                   </select>
                 </div>
+                {errors.industry && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.industry.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -205,9 +273,12 @@ export default function RegisterCompany() {
                     <circle cx="9" cy="7" r="4" />
                   </svg>
                   <select
+                    {...register('employeeCount', {
+                      required: 'Company size is required',
+                    })}
                     id="companySize"
                     name="companySize"
-                    className="input pl-10"
+                    className={`input pl-10 ${errors.employeeCount ? 'border-red-500' : ''}`}
                   >
                     <option value="">Select company size</option>
                     <option value="1-10">1-10 employees</option>
@@ -218,6 +289,11 @@ export default function RegisterCompany() {
                     <option value="1000+">1000+ employees</option>
                   </select>
                 </div>
+                {errors.employeeCount && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.employeeCount.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label for="foundedYear" className="label">
@@ -242,15 +318,31 @@ export default function RegisterCompany() {
                     <path d="M3 10h18" />
                   </svg>
                   <input
+                    {...register('foundedYear', {
+                      required: 'Founded year is required',
+                      min: {
+                        value: 1800,
+                        message: 'Please enter a valid year',
+                      },
+                      max: {
+                        value: 2025,
+                        message: 'Please enter a valid year',
+                      },
+                    })}
                     type="number"
                     id="foundedYear"
                     name="foundedYear"
-                    className="input pl-10"
+                    className={`input pl-10 ${errors.foundedYear ? 'border-red-500' : ''}`}
                     placeholder="e.g., 2010"
                     min="1800"
                     max="2025"
                   />
                 </div>
+                {errors.foundedYear && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.foundedYear.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -277,14 +369,21 @@ export default function RegisterCompany() {
                   <circle cx="12" cy="10" r="3" />
                 </svg>
                 <input
+                  {...register('location', {
+                    required: 'Location is required',
+                  })}
                   type="text"
                   id="location"
                   name="location"
-                  className="input pl-10"
+                  className={`input pl-10 ${errors.location ? 'border-red-500' : ''}`}
                   placeholder="City, Country"
-                  required
                 />
               </div>
+              {errors.location && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.location.message}
+                </p>
+              )}
             </div>
 
             {/* <!-- Company Description --> */}
@@ -296,15 +395,26 @@ export default function RegisterCompany() {
               <textarea
                 id="description"
                 name="description"
-                className="textarea min-h-30"
+                className={`textarea min-h-30 ${errors.description ? 'border-red-500' : ''}`}
                 placeholder="Tell us about your company, mission, and what makes it a great place to work..."
-                required
+                {...register('description', {
+                  required: 'Description is required',
+                  minLength: {
+                    value: 100,
+                    message: 'Description must be at least 100 characters long',
+                  },
+                })}
               ></textarea>
               <p className="text-xs text-muted-foreground">
                 Minimum 100 characters. This will be displayed on your company
                 profile.
               </p>
             </div>
+            {errors.description && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           {/* <!-- Account Security Section --> */}
@@ -351,17 +461,23 @@ export default function RegisterCompany() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   <input
-                    type="password"
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters long',
+                      },
+                    })}
+                    type={`${showPassword ? 'text' : 'password'}`}
                     id="password"
                     name="password"
-                    className="input pl-10 pr-10"
+                    className={`input pl-10 pr-10 ${errors.password ? 'border-red-500' : ''}`}
                     placeholder="Create a strong password"
-                    required
                   />
                   <button
                     type="button"
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    onclick="togglePassword('password')"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -380,6 +496,11 @@ export default function RegisterCompany() {
                     </svg>
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label for="confirmPassword" className="label">
@@ -403,17 +524,25 @@ export default function RegisterCompany() {
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   <input
-                    type="password"
+                    {...register('confirmPassword', {
+                      validate: (value) =>
+                        value === passWord || 'Passwords do not match',
+                      required: 'Please confirm your password',
+                      minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters long',
+                      },
+                    })}
+                    type={`${showConfirmPassword ? 'text' : 'password'}`}
                     id="confirmPassword"
                     name="confirmPassword"
-                    className="input pl-10 pr-10"
+                    className={`input pl-10 pr-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                     placeholder="Re-enter your password"
-                    required
                   />
                   <button
                     type="button"
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    onclick="togglePassword('confirmPassword')"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -432,6 +561,11 @@ export default function RegisterCompany() {
                     </svg>
                   </button>
                 </div>
+                {errors.confirmPassword && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </div>
             <p className="text-xs text-muted-foreground -mt-2">
@@ -443,11 +577,13 @@ export default function RegisterCompany() {
           <div className="space-y-3 pt-2">
             <div className="flex items-start gap-2">
               <input
+                {...register('terms', {
+                  required: 'You must agree to the Terms of Service',
+                })}
                 type="checkbox"
                 id="terms"
                 name="terms"
-                className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring"
-                required
+                className={`mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring ${errors.terms ? 'border-red-500' : ''}`}
               />
               <label for="terms" className="text-sm text-muted-foreground">
                 I agree to the
@@ -460,33 +596,53 @@ export default function RegisterCompany() {
                 </a>
               </label>
             </div>
+            {errors.terms && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.terms.message}
+              </p>
+            )}
 
             <div className="flex items-start gap-2">
               <input
+                {...register('verified', {
+                  required: 'You must confirm your authorization',
+                })}
                 type="checkbox"
                 id="verified"
                 name="verified"
-                className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring"
-                required
+                className={`mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring ${errors.verified ? 'border-red-500' : ''}`}
               />
               <label for="verified" className="text-sm text-muted-foreground">
                 I confirm that I am an authorized representative of this company
                 and have the right to register on its behalf
               </label>
             </div>
+            {errors.verified && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.verified.message}
+              </p>
+            )}
 
             <div className="flex items-start gap-2">
               <input
+                {...register('updates', {
+                  required: 'You must agree to receive updates',
+                })}
                 type="checkbox"
                 id="updates"
                 name="updates"
-                className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring"
+                className={`mt-1 h-4 w-4 rounded border-border text-primary focus:ring-ring ${errors.updates ? 'border-red-500' : ''}`}
               />
               <label for="updates" className="text-sm text-muted-foreground">
                 Send me product updates, hiring tips, and promotional offers via
                 email
               </label>
             </div>
+            {errors.updates && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.updates.message}
+              </p>
+            )}
           </div>
 
           {/* <!-- Submit Button --> */}
