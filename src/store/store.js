@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import pageCounterReducer from '../feature/pageCount/pageCountSlice';
+import currentUserReducer from '../feature/currentUser/currentUserSlice';
 
 export const store = configureStore({
   reducer: {
-    pageCount: pageCounterReducer,
+    currentUser: currentUserReducer,
   },
 });

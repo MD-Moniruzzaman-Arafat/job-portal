@@ -7,6 +7,8 @@ import RegisterUser from '../components/RegisterUser/RegisterUser';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import UserDashboardPage from '../pages/UserDashboardPage';
+import ProtectedRoute from './ProtectedRoute';
 
 let router = createBrowserRouter([
   {
@@ -44,6 +46,14 @@ let router = createBrowserRouter([
             element: <RegisterCompany />,
           },
         ],
+      },
+      {
+        path: '/user-dashboard',
+        element: (
+          <ProtectedRoute>
+            <UserDashboardPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

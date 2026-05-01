@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router';
 import { getAllJobs } from '../api/api';
 import Filter from '../components/HomePageComponent/Filter';
@@ -10,6 +11,8 @@ import { formatNumber } from '../utils';
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const user = useSelector((state) => state.currentUser.user);
+  console.log(user);
 
   const page = Number(searchParams.get('page')) || 1;
 

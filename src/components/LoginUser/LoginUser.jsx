@@ -3,11 +3,15 @@ import { Eye, LogIn, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router';
 import { login } from '../../api/api';
+import { setCurrentUser } from '../../feature/currentUser/currentUserSlice';
 
 export default function LoginUser() {
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,6 +25,9 @@ export default function LoginUser() {
     onSuccess: (data) => {
       toast.success('Login Success');
       console.log(data);
+      localStorage.setItem('token', data.token);
+      dispatch(setCurrentUser(data));
+      navigate('/user-dashboard');
     },
     onError: () => toast.error('Login Fail'),
   });
